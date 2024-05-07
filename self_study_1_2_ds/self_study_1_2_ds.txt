@@ -1,0 +1,64 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Collections.Generic;
+
+namespace self_study_1_2_ds
+{
+    public partial class Form1 : Form
+    {
+        private Dictionary<int, Point> vertexPositions = new Dictionary<int, Point>();
+        private List<(int, int)> edges = new List<(int, int)>();
+
+        public Form1()
+        {
+            InitializeComponent();
+            InitializeGraph();
+        }
+
+        private void InitializeGraph()
+        {
+            AddVertex(1, new Point(50, 100));
+            AddVertex(2, new Point(150, 50));
+            AddVertex(3, new Point(250, 50));
+            AddVertex(4, new Point(350, 100));
+            AddVertex(5, new Point(250, 150));
+            AddVertex(6, new Point(150, 150));
+
+            AddEdge(1, 2);
+            AddEdge(2, 3);
+            AddEdge(3, 5);
+            AddEdge(4, 5);
+            AddEdge(1, 4);
+            AddEdge(2, 4);
+        }
+
+        private void AddVertex(int vertex, Point position)
+        {
+            vertexPositions[vertex] = position;
+        }
+
+        private void AddEdge(int startVertex, int endVertex)
+        {
+            edges.Add((startVertex, endVertex));
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            foreach (var vertex in vertexPositions)
+            {
+                e.Graphics.FillEllipse(Brushes.Yellow, vertex.Value.X - 10, vertex.Value.Y - 10, 20, 20);
+                e.Graphics.DrawString(vertex.Key.ToString(), Font, Brushes.Black, vertex.Value.X - 5, vertex.Value.Y - 5);
+            }
+
+            foreach (var edge in edges)
+            {
+                Point startPoint = vertexPositions[edge.Item1];
+                Point endPoint = vertexPositions[edge.Item2];
+                e.Graphics.DrawLine(Pens.Red, startPoint, endPoint);
+            }
+        }
+    }
+}
